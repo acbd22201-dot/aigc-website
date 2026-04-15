@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幕后故事 - 浪浪山小妖怪</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "Heiti SC", sans-serif;
+        }
+
+        body {
+            background-color: #f9f5f0;
+            color: #5d4037;
+            line-height: 1.8;
+        }
+
+        /* 导航栏（保持网站一致性） */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 253, 248, 0.95);
+            box-shadow: 0 2px 8px rgba(160, 130, 90, 0.1);
+            z-index: 999;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-image: url("小猪妖.jpg"); /* 小野猪妖头像 */
+            background-size: cover;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e67e22;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            color: #663300;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item a:hover, .nav-item a.active {
+            color: #e67e22;
+            border-bottom: 2px solid #e67e22;
+        }
+
+        .menu-btn {
+            display: none;
+            font-size: 24px;
+            color: #663300;
+            cursor: pointer;
+        }
+
+        /* 页面主体 */
+        .container {
+            max-width: 1000px;
+            margin: 120px auto 80px;
+            padding: 0 20px;
+        }
+
+        /* 标题区域 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #e67e22;
+            border-radius: 3px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            color: #663300;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .page-title i {
+            color: #e67e22;
+        }
+
+        .page-desc {
+            color: #8d6e63;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* 创作初衷板块 */
+        .origin-story {
+            background-color: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 60px;
+            box-shadow: 0 3px 12px rgba(160, 130, 90, 0.08);
+        }
+
+        .section-title {
+            font-size: 22px;
+            color: #663300;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: #e67e22;
+        }
+
+        .origin-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .origin-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .origin-text p {
+            margin-bottom: 20px;
+            color: #8d6e63;
+        }
+
+        .origin-quote {
+            background-color: #fff3e0;
+            border-left: 3px solid #e67e22;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .quote-text {
+            font-style: italic;
+            color: #663300;
+            margin-bottom: 10px;
+        }
+
+        .quote-author {
+            font-size: 14px;
+            color: #e67e22;
+            text-align: right;
+        }
+
+        /* 创作历程时间线 */
+        .creation-timeline {
+            margin: 70px 0;
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .creation-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #e67e22;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 50px;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -46px;
+            top: 5px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: #e67e22;
+        }
+
+        .timeline-date {
+            font-size: 14px;
+            color: #e67e22;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .timeline-title {
+            font-size: 18px;
+            color: #663300;
+            margin-bottom: 12px;
+        }
+
+        .timeline-desc {
+            color: #8d6e63;
+            padding-left: 10px;
+            border-left: 1px dashed #d7ccc8;
+        }
+
+        /* 角色设计理念 */
+        .character-design {
+            margin: 70px 0;
+        }
+
+        .design-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .design-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 3px 12px rgba(160, 130, 90, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .design-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .design-character {
+            font-size: 18px;
+            color: #663300;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .design-character i {
+            color: #e67e22;
+        }
+
+        .design-content {
+            color: #8d6e63;
+            font-size: 14px;
+        }
+
+        .design-note {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #f1f1f1;
+            font-size: 13px;
+            color: #e67e22;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        /* 制作团队 */
+        .team-section {
+            background-color: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 70px 0;
+            box-shadow: 0 3px 12px rgba(160, 130, 90, 0.08);
+        }
+
+        .team-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .team-member {
+            text-align: center;
+            padding: 20px;
+            width: 200px;
+        }
+
+        .member-role {
+            color: #e67e22;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .member-name {
+            color: #663300;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .member-contribution {
+            font-size: 13px;
+            color: #8d6e63;
+            padding-top: 10px;
+            border-top: 1px dashed #f1f1f1;
+        }
+
+        /* 数据统计（极简可视化） */
+        .stats-section {
+            margin: 70px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 3px 12px rgba(160, 130, 90, 0.08);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .stat-value::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: rgba(230, 126, 34, 0.1);
+            z-index: -1;
+            border-radius: 4px;
+        }
+
+        .stat-label {
+            color: #8d6e63;
+            font-size: 14px;
+        }
+
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(160, 130, 90, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top i {
+            font-size: 24px;
+            color: #e67e22;
+        }
+
+        /* 页脚 */
+        .footer {
+            background-color: #663300;
+            color: white;
+            padding: 50px 0 20px;
+            margin-top: 80px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #f9f5f0;
+        }
+
+        .footer-desc {
+            color: #f9f5f0cc;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f9f5f099;
+            font-size: 14px;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                flex-direction: column;
+                background-color: rgba(255, 253, 248, 0.98);
+                width: 100%;
+                height: calc(100vh - 70px);
+                padding: 30px;
+                transition: 0.3s;
+                gap: 20px;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .origin-story, .team-section {
+                padding: 25px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .team-member {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-img">
+                    
+                </div>
+                <span class="logo-text">浪浪山小妖怪</span>
+            </a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html">首页</a></li>
+                <li class="nav-item"><a href="monster-album.html">浪浪山图鉴</a></li>
+                <li class="nav-item"><a href="plot-review.html">剧情回顾</a></li>
+                <li class="nav-item"><a href="behind-the-scenes.html" class="active">幕后故事</a></li>
+                <li class="nav-item"><a href="quotes.html">妖怪语录</a></li>
+                <li class="nav-item"><a href="interaction.html">互动专区</a></li>
+                <li class="nav-item"><a href="about-author.html">关于作者</a></li>
+                <li class="nav-item"><a href="assignment.html">作业说明</a></li>
+            </ul>
+            <div class="menu-btn" id="menuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面主体 -->
+    <div class="container">
+        <!-- 标题区域 -->
+        <div class="page-header">
+            <h1 class="page-title"><i class="fas fa-lightbulb"></i>浪浪山幕后故事</h1>       
+           <p class="page-desc">探索《浪浪山小妖怪》的创作初衷、角色设计理念与制作历程，感受平凡故事背后的温暖用心</p>
+        </div>
+
+        <!-- 创作初衷 -->
+        <section class="origin-story">
+            <h2 class="section-title"><i class="fas fa-heart"></i>创作的初心</h2>
+            <div class="origin-content">
+                <div class="origin-text">
+                    <p>《浪浪山小妖怪》的诞生源于一次团队脑暴——我们想讲述"小人物"的故事。在充斥着英雄与史诗的作品中，那些平凡、笨拙却始终努力的角色往往更能触动人心。</p>
+                    <p>主创团队曾在讨论中提到："每个人都经历过'小猪妖时刻'——面对严苛的任务、复杂的人际关系，却依然想证明自己的价值。"这成为故事的核心灵感。</p>
+                    
+                    <div class="origin-quote">
+                        <p class="quote-text">"我们不想塑造完美的英雄，只想描绘一群会犯错、会迷茫，但永远不会放弃的小妖怪。就像现实中的我们，平凡却闪光。"</p>
+                        <p class="quote-author">—— 导演 於水</p>
+                    </div>
+                    
+                    <p>为了让故事更贴近生活，团队收集了近百个"职场新人"的真实经历，将那些笨拙的坚持、微小的成就感融入剧情，最终形成了浪浪山的世界。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 创作历程时间线 -->
+        <section class="creation-timeline">
+            <h2 class="section-title"><i class="fas fa-hourglass-half"></i>创作历程</h2>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">2023年3月</div>
+                <h3 class="timeline-title">最初的点子</h3>
+                <p class="timeline-desc">团队提出"妖怪职场"概念，最初设定仅3个角色，小猪妖是个调皮捣蛋的形象，与现在的"努力型"人设截然不同。</p>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">2023年5月</div>
+                <h3 class="timeline-title">角色重设计</h3>
+                <p class="timeline-desc">经过12版修改，确定6个核心角色的性格与分工。小猪妖的"绿围巾"设定来自主创母亲的手工制品，象征"家乡的牵挂"。</p>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">2023年8月</div>
+                <h3 class="timeline-title">剧情框架确定</h3>
+                <p class="timeline-desc">放弃宏大叙事，聚焦"桥梁修补""信件护送"等小任务，用日常细节展现团队成长。删除了原定的"对抗大魔王"主线。</p>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">2023年11月</div>
+                <h3 class="timeline-title">首次试读反馈</h3>
+                <p class="timeline-desc">100名试读者中，"暴雨修桥"章节好评率最高，团队因此增加了3处类似的"团队协作"情节。</p>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-date">2024年2月</div>
+                <h3 class="timeline-title">最终定稿</h3>
+                <p class="timeline-desc">历经7次大改，确定18话内容，保留"不完美结局"——小队未成为传奇，却在平凡中找到了自己的价值。</p>
+            </div>
+        </section>
+
+        <!-- 角色设计理念 -->
+        <section class="character-design">
+            <h2 class="section-title"><i class="fas fa-palette"></i>角色设计理念</h2>
+            <div class="design-grid">
+                <div class="design-card">
+                    <h3 class="design-character"><i class="fas fa-user"></i>小猪妖</h3>
+                    <p class="design-content">设计原型来自"职场新人"——能力普通但态度积极。绿围巾与小葫芦是"初心"的象征，鼻子上的划痕暗示他总在碰壁却从不放弃。</p>
+                    <p class="design-note"><i class="fas fa-comment-dots"></i>最初想给小猪妖加"会喷火"的技能，后来放弃了——"普通人的坚持更有力量"</p>
+                </div>
+                
+                <div class="design-card">
+                    <h3 class="design-character"><i class="fas fa-shield-alt"></i>猩猩怪</h3>
+                    <p class="design-content">沉默寡言的武力担当，原型是团队里"默默做事的技术大佬"。胸前的疤痕来自保护队友的经历，却从不主动提起。</p>
+                    <p class="design-note"><i class="fas fa-comment-dots"></i>台词是所有角色中最少的，但每句都经过3次以上打磨</p>
+                </div>
+                
+                <div class="design-card">
+                    <h3 class="design-character"><i class="fas fa-brain"></i>黄鼠狼精</h3>
+                    <p class="design-content">用小聪明掩饰善良的角色，原型是"嘴硬心软的同事"。尖耳朵会随情绪变化——紧张时会耷拉下来，是隐藏的萌点。</p>
+                    <p class="design-note"><i class="fas fa-comment-dots"></i>原定是反派，因"计谋总意外帮到大家"的设定太受欢迎而改为正面角色</p>
+                </div>
+                
+                <div class="design-card">
+                    <h3 class="design-character"><i class="fas fa-wrench"></i>蛤蟆精</h3>
+                    <p class="design-content">随身携带工具箱的技术控，原型是"喜欢钻研的细节控"。背篓里的工具总少一件，对应"计划赶不上变化"的生活哲学。</p>
+                    <p class="design-note"><i class="fas fa-comment-dots"></i>工具的样式参考了80年代老物件，增加怀旧感</p>
+                </div>
+                
+                <div class="design-card">
+                    <h3 class="design-character"><i class="fas fa-bolt"></i>白毛老鼠精</h3>
+                    <p class="design-content">灵动敏捷的机动担当，铃铛是"打破偏见"的象征——最初被误解为小偷，最终用行动获得信任。</p>
+                    <p class="design-note"><i class="fas fa-comment-dots"></i>白色毛发与其他角色的深色形成对比，暗示"不同但平等"</p>
+                </div>
+                
+                <div class="design-card">
+                    <h3 class="design-character"><i class="fas fa-star"></i>黄眉怪</h3>
+                    <p class="design-content">实力强大却孤独的角色，原型是"外冷内热的前辈"。黄色眉毛会随情绪变弯——不耐烦时最弯，却自己从未察觉。</p>
+                    <p class="design-note"><i class="fas fa-comment-dots"></i>法力设定被削弱了5次，避免"强者拯救世界"的俗套</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 制作团队 -->
+        <section class="team-section">
+            <h2 class="section-title"><i class="fas fa-users"></i>制作团队</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <p class="member-role">导演/编剧</p>
+                    <p class="member-name">於水</p>
+                    <p class="member-contribution">提出"平凡妖怪"概念，主导剧情框架设计，最擅长写团队互动细节</p>
+                </div>
+                
+                <div class="team-member">
+                    <p class="member-role">角色设计师</p>
+                    <p class="member-name">张小树</p>
+                    <p class="member-contribution">设计6个角色的最终形象，绿围巾的灵感来自其母亲的手工作品</p>
+                </div>
+                
+                <div class="team-member">
+                    <p class="member-role">剧情顾问</p>
+                    <p class="member-name">王大河</p>
+                    <p class="member-contribution">提供30+职场真实案例，"暴雨修桥"情节改编自其亲身经历</p>
+                </div>
+                
+                <div class="team-member">
+                    <p class="member-role">后期统筹</p>
+                    <p class="member-name">刘月亮</p>
+                    <p class="member-contribution">负责节奏把控，删除了1.2万字冗余内容，让剧情更紧凑</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 数据统计 -->
+        <section class="stats-section">
+            <h2 class="section-title"><i class="fas fa-chart-pie"></i>创作数据</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">18</div>
+                    <div class="stat-label">最终定稿章节数</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value">7</div>
+                    <div class="stat-label">剧情框架大改次数</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">角色设计迭代版本</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value">100+</div>
+                    <div class="stat-label">参考的真实职场案例</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 返回顶部按钮 -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <h3 class="footer-title">浪浪山小妖怪主题网站</h3>
+            <p class="footer-desc">
+            本网站所有素材来源于《浪浪山小妖怪》官方及网络公开资源<br>
+                设计理念：以治愈系风格为核心，打造沉浸式的浪浪山世界，传递温暖与快乐
+            </p>
+            <div class="copyright">
+                © 2025 设计人：侯德礼
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript 交互 -->
+    <script>
+        // 移动端菜单切换
+        const menuBtn = document.getElementById('menuBtn');
+        const navMenu = document.querySelector('.nav-menu');
+
+        menuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            const icon = menuBtn.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            backToTop.classList.toggle('active', window.scrollY > 300);
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 元素滚动动画
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.design-card, .stat-card, .team-member');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        };
+
+        // 初始化样式
+        document.querySelectorAll('.design-card, .stat-card, .team-member').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        });
+
+        // 监听滚动事件
+        window.addEventListener('scroll', animateOnScroll);
+        // 初始加载时执行一次
+        animateOnScroll();
+    </script>
+</body>
+</html>

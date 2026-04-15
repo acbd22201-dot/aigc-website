@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互动专区 - 浪浪山小妖怪</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "Heiti SC", sans-serif;
+        }
+
+        body {
+            background-color: #f9f5f0;
+            color: #5d4037;
+            line-height: 1.8;
+        }
+
+        /* 导航栏（保持一致性） */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 253, 248, 0.95);
+            box-shadow: 0 2px 8px rgba(160, 130, 90, 0.1);
+            z-index: 999;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-image: url("小猪妖.jpg"); /* 小野猪妖头像 */
+            background-size: cover;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e67e22;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            color: #663300;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item a:hover, .nav-item a.active {
+            color: #e67e22;
+            border-bottom: 2px solid #e67e22;
+        }
+
+        .menu-btn {
+            display: none;
+            font-size: 24px;
+            color: #663300;
+            cursor: pointer;
+        }
+
+        /* 页面主体 */
+        .container {
+            max-width: 1000px;
+            margin: 120px auto 80px;
+            padding: 0 20px;
+        }
+
+        /* 标题区域 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .page-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: #e67e22;
+            border-radius: 3px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            color: #663300;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .page-title i {
+            color: #e67e22;
+        }
+
+        .page-desc {
+            color: #8d6e63;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* 互动板块容器 */
+        .interactive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        /* 通用板块样式 */
+        .interactive-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 3px 12px rgba(160, 130, 90, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .interactive-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-title {
+            font-size: 22px;
+            color: #663300;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: #e67e22;
+        }
+
+        /* 性格测试板块 */
+        .quiz-section {
+            margin-bottom: 40px;
+        }
+
+        .quiz-question {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #f1f1f1;
+        }
+
+        .question-text {
+            font-size: 16px;
+            color: #5d4037;
+            margin-bottom: 15px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .option-item:hover {
+            background-color: #fff3e0;
+        }
+
+        .option-item.selected {
+            background-color: #fff3e0;
+            border: 1px solid #e67e22;
+        }
+
+        .option-radio {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #e67e22;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option-item.selected .option-radio::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #e67e22;
+        }
+
+        .quiz-btn {
+            display: block;
+            width: 100%;
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .quiz-btn:hover {
+            background-color: #d35400;
+        }
+
+        .quiz-result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fff3e0;
+            display: none;
+        }
+
+        .result-title {
+            font-size: 18px;
+            color: #663300;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .result-content {
+            color: #8d6e63;
+            font-size: 15px;
+        }
+
+        /* 留言板板块 */
+        .message-board {
+            height: 100%;
+        }
+
+        .message-form {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            color: #663300;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #d7ccc8;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #5d4037;
+            background-color: white;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #e67e22;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        .submit-btn {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #d35400;
+        }
+
+        /* 留言列表 */
+        .message-list {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .message-item {
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f5f0;
+            margin-bottom: 15px;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .message-author {
+            font-weight: 500;
+            color: #663300;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .author-tag {
+            font-size: 12px;
+            background-color: #e67e22;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #8d6e63;
+        }
+
+        .message-content {
+            color: #5d4037;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* 趣味投票板块 */
+        .vote-section {
+            grid-column: 1 / -1;
+        }
+
+        .vote-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .vote-item {
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f5f0;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .vote-item:hover {
+            background-color: #fff3e0;
+        }
+
+        .vote-item.selected {
+            border-color: #e67e22;
+            background-color: #fff3e0;
+        }
+
+        .vote-character {
+            font-size: 18px;
+            color: #663300;
+            margin-bottom: 10px;
+        }
+
+        .vote-bar {
+            height: 8px;
+            background-color: #d7ccc8;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .vote-progress {
+            height: 100%;
+            background-color: #e67e22;
+            border-radius: 4px;
+            width: 0;
+            transition: width 1s ease;
+        }
+
+        .vote-count {
+            font-size: 13px;
+            color: #8d6e63;
+        }
+
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(160, 130, 90, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top i {
+            font-size: 24px;
+            color: #e67e22;
+        }
+
+        /* 页脚 */
+        .footer {
+            background-color: #663300;
+            color: white;
+            padding: 50px 0 20px;
+            margin-top: 80px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #f9f5f0;
+        }
+
+        .footer-desc {
+            color: #f9f5f0cc;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f9f5f099;
+            font-size: 14px;
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #e67e22;
+            border-radius: 3px;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                flex-direction: column;
+                background-color: rgba(255, 253, 248, 0.98);
+                width: 100%;
+                height: calc(100vh - 70px);
+                padding: 30px;
+                transition: 0.3s;
+                gap: 20px;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .interactive-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .interactive-card {
+                padding: 25px 20px;
+            }
+
+            .vote-options {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .vote-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-img">
+                    
+                </div>
+                <span class="logo-text">浪浪山小妖怪</span>
+            </a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html">首页</a></li>
+                <li class="nav-item"><a href="monster-album.html">浪浪山图鉴</a></li>
+                <li class="nav-item"><a href="plot-review.html">剧情回顾</a></li>
+                <li class="nav-item"><a href="behind-the-scenes.html">幕后故事</a></li>
+                <li class="nav-item"><a href="quotes.html">妖怪语录</a></li>
+                <li class="nav-item"><a href="interaction.html" class="active">互动专区</a></li>
+                <li class="nav-item"><a href="about-author.html">关于作者</a></li>
+                <li class="nav-item"><a href="assignment.html">作业说明</a></li>
+            </ul>
+            <div class="menu-btn" id="menuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面主体 -->
+    <div class="container">
+        <!-- 标题区域 -->
+        <div class="page-header">
+            <h1 class="page-title"><i class="fas fa-hands-helping"></i>浪浪山互动专区</h1>
+            <p class="page-desc">参与趣味测试、留下你的感悟、为喜欢的角色投票——一起解锁浪浪山的更多乐趣</p>
+        </div>
+
+        <!-- 互动板块网格 -->
+        <div class="interactive-grid">
+            <!-- 性格测试卡片 -->
+            <div class="interactive-card quiz-section">
+                <h2 class="card-title"><i class="fas fa-user-check"></i>测一测：你是浪浪山的哪个小妖怪？</h2>
+                
+                <!-- 测试问题1 -->
+                <div class="quiz-question">
+                    <div class="question-text">1. 团队遇到困难时，你会？</div>
+                    <div class="quiz-options">
+                        <div class="option-item" data-value="pig">
+                            <div class="option-radio"></div>
+                            <div class="option-text">默默多做一点，哪怕只是搬块石头</div>
+                        </div>
+                        <div class="option-item" data-value="ape">
+                            <div class="option-radio"></div>
+                            <div class="option-text">冲在前面，用实力解决问题</div>
+                        </div>
+                        <div class="option-item" data-value="weasel">
+                            <div class="option-radio"></div>
+                            <div class="option-text">先吐槽几句，然后想出小聪明办法</div>
+                        </div>
+                        <div class="option-item" data-value="toad">
+                            <div class="option-radio"></div>
+                            <div class="option-text">检查细节，确保方案没有漏洞</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 测试问题2 -->
+                <div class="quiz-question">
+                    <div class="question-text">2. 别人对你的评价，你更在意？</div>
+                    <div class="quiz-options">
+                        <div class="option-item" data-value="mouse">
+                            <div class="option-radio"></div>
+                            <div class="option-text">是否认可我的独特之处</div>
+                        </div>
+                        <div class="option-item" data-value="eyebrow">
+                            <div class="option-radio"></div>
+                            <div class="option-text">是否看到我的真实实力</div>
+                        </div>
+                        <div class="option-item" data-value="pig">
+                            <div class="option-radio"></div>
+                            <div class="option-text">是否觉得我足够努力</div>
+                        </div>
+                        <div class="option-item" data-value="weasel">
+                            <div class="option-radio"></div>
+                            <div class="option-text">是否懂我的口是心非</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 测试问题3 -->
+                <div class="quiz-question">
+                    <div class="question-text">3. 完成任务后，你想得到的奖励是？</div>
+                    <div class="quiz-options">
+                        <div class="option-item" data-value="pig">
+                            <div class="option-radio"></div>
+                            <div class="option-text">一句真诚的夸奖</div>
+                        </div>
+                        <div class="option-item" data-value="ape">
+                            <div class="option-radio"></div>
+                            <div class="option-text">大家的安全与认可</div>
+                        </div>
+                        <div class="option-item" data-value="mouse">
+                            <div class="option-radio"></div>
+                            <div class="option-text">自由探索的时间</div>
+                        </div>
+                        <div class="option-item" data-value="toad">
+                            <div class="option-radio"></div>
+                            <div class="option-text">新的工具或材料</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="quiz-btn" id="quizSubmit">查看我的妖怪身份</button>
+
+                <!-- 测试结果 -->
+                <div class="quiz-result" id="quizResult">
+                    <div class="result-title"><i class="fas fa-award"></i>你的浪浪山身份：<span id="resultName"></span></div>
+                    <div class="result-content" id="resultDesc"></div>
+                </div>
+            </div>
+
+            <!-- 留言板卡片 -->
+            <div class="interactive-card message-board">
+                <h2 class="card-title"><i class="fas fa-pen-fancy"></i>浪浪山留言板</h2>
+                
+                <!-- 留言表单 -->
+                <form class="message-form" id="messageForm">
+                    <div class="form-group">
+                        <label class="form-label">你的昵称</label>
+                        <input type="text" class="form-input" id="msgAuthor" placeholder="请输入你的昵称（不超过8个字）" maxlength="8" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">想对浪浪山说的话</label>
+                        <textarea class="form-input form-textarea" id="msgContent" placeholder="分享你的感悟、喜欢的角色或想对小妖怪说的话..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">发布留言</button>
+                </form>
+
+                <!-- 留言列表 -->
+                <div class="message-list" id="messageList">
+                    <!-- 示例留言 -->
+                    <div class="message-item">
+                        <div class="message-header">
+                            <div class="message-author">
+                                小团子 <span class="author-tag">官方</span>
+                            </div>
+                            <div class="message-time">2024-05-12 10:23</div>
+                        </div>
+                        <div class="message-content">
+                            最喜欢小猪妖的那句"就算是小妖怪，也能走出自己的浪浪山"，每次看到都觉得充满力量✨
+                        </div>
+                    </div>
+
+                    <div class="message-item">
+                        <div class="message-header">
+                            <div class="message-author">
+                                山野客
+                            </div>
+                            <div class="message-time">2024-05-10 18:45</div>
+                        </div>
+                        <div class="message-content">
+                            猩猩怪虽然话少，但每次都默默保护大家，这种温柔真的太戳人了！
+                        </div>
+                    </div>
+
+                    <div class="message-item">
+                        <div class="message-header">
+                            <div class="message-author">
+                                风过林梢
+                            </div>
+                            <div class="message-time">2024-05-08 15:12</div>
+                        </div>
+                        <div class="message-content">
+                            希望浪浪山的小妖怪们永远快乐，不用面对那么多困难😭
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 趣味投票卡片 -->
+            <div class="interactive-card vote-section">
+                <h2 class="card-title"><i class="fas fa-chart-bar"></i>人气投票：你最喜欢的浪浪山角色</h2>
+                
+                <div class="vote-options">
+                    <!-- 小猪妖 -->
+                    <div class="vote-item" data-char="pig">
+                        <div class="vote-character">小猪妖</div>
+                        <div class="vote-bar">
+                            <div class="vote-progress" style="width: 35%;"></div>
+                        </div>
+                        <div class="vote-count">352票 (35%)</div>
+                    </div>
+
+                    <!-- 猩猩怪 -->
+                    <div class="vote-item" data-char="ape">
+                        <div class="vote-character">猩猩怪</div>
+                        <div class="vote-bar">
+                            <div class="vote-progress" style="width: 22%;"></div>
+                        </div>
+                        <div class="vote-count">221票 (22%)</div>
+                    </div>
+
+                    <!-- 黄鼠狼精 -->
+                    <div class="vote-item" data-char="weasel">
+                        <div class="vote-character">黄鼠狼精</div>
+                        <div class="vote-bar">
+                            <div class="vote-progress" style="width: 18%;"></div>
+                        </div>
+                        <div class="vote-count">183票 (18%)</div>
+                    </div>
+
+                    <!-- 蛤蟆精 -->
+                    <div class="vote-item" data-char="toad">
+                        <div class="vote-character">蛤蟆精</div>
+                        <div class="vote-bar">
+                            <div class="vote-progress" style="width: 10%;"></div>
+                        </div>
+                        <div class="vote-count">102票 (10%)</div>
+                    </div>
+
+                    <!-- 白毛老鼠精 -->
+                    <div class="vote-item" data-char="mouse">
+                        <div class="vote-character">白毛老鼠精</div>
+                        <div class="vote-bar">
+                            <div class="vote-progress" style="width: 11%;"></div>
+                        </div>
+                        <div class="vote-count">114票 (11%)</div>
+                    </div>
+
+                    <!-- 黄眉怪 -->
+                    <div class="vote-item" data-char="eyebrow">
+                        <div class="vote-character">黄眉怪</div>
+                        <div class="vote-bar">
+                            <div class="vote-progress" style="width: 4%;"></div>
+                        </div>
+                        <div class="vote-count">42票 (4%)</div>
+                    </div>
+                </div>
+
+                <button class="quiz-btn" id="voteBtn">为选中的角色投票</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 返回顶部按钮 -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <h3 class="footer-title">浪浪山小妖怪主题网站</h3>
+            <p class="footer-desc">
+               本网站所有素材来源于《浪浪山小妖怪》官方及网络公开资源<br>
+                设计理念：以治愈系风格为核心，打造沉浸式的浪浪山世界，传递温暖与快乐
+            </p>
+            <div class="copyright">
+                © 2025 设计人：侯德礼
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript 交互 -->
+    <script>
+        // 移动端菜单切换
+        const menuBtn = document.getElementById('menuBtn');
+        const navMenu = document.querySelector('.nav-menu');
+
+        menuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            const icon = menuBtn.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            backToTop.classList.toggle('active', window.scrollY > 300);
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 性格测试选项选择
+        const optionItems = document.querySelectorAll('.option-item');
+        let selectedAnswers = {};
+
+        optionItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // 找到同组的其他选项
+                const parent = item.closest('.quiz-options');
+                parent.querySelectorAll('.option-item').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                
+                // 选中当前选项
+                item.classList.add('selected');
+                
+                // 记录答案
+                const questionIndex = item.closest('.quiz-question').querySelector('.question-text').charAt(0);
+                selectedAnswers[questionIndex] = item.getAttribute('data-value');
+            });
+        });
+
+        // 测试结果配置
+        const resultConfig = {
+            pig: {
+                name: '小猪妖',
+                desc: '你像小猪妖一样，平凡却充满韧性，哪怕走得慢，也从未停下脚步。你相信努力的意义，珍惜团队的温暖，小小的进步就能让你感到满足。在浪浪山里，你是最温暖的存在～'
+            },
+            ape: {
+                name: '猩猩怪',
+                desc: '你是团队里的猩猩怪，沉默寡言却可靠至极。你习惯用行动代替言语，默默守护身边的人，看似笨拙的外表下藏着最柔软的温柔。大家都离不开你的保护～'
+            },
+            weasel: {
+                name: '黄鼠狼精',
+                desc: '你就是嘴硬心软的黄鼠狼精！表面上爱吐槽、耍小聪明，实则比谁都在乎团队。你的奇思妙想总能化解危机，虽然嘴上不承认，但心里早就把大家当成家人了～'
+            },
+            toad: {
+                name: '蛤蟆精',
+                desc: '你是追求极致的蛤蟆精，注重细节、精益求精。你总在背后默默完善方案，确保每一步都不出错，虽然偶尔会被认为太较真，但团队的成功离不开你的严谨～'
+            },
+            mouse: {
+                name: '白毛老鼠精',
+                desc: '你是灵动的白毛老鼠精，拥有独特的视角和敏捷的思维。你不被世俗眼光束缚，用自己的方式解决问题，铃铛一响，就知道你又带来了新惊喜～'
+            },
+            eyebrow: {
+                name: '黄眉怪',
+                desc: '你是外冷内热的黄眉怪，实力强大却不张扬。你看似高冷，实则默默关注着团队的成长，偶尔的提点都藏着用心，是团队里的隐藏守护者～'
+            }
+        };
+
+        // 提交测试
+        const quizSubmit = document.getElementById('quizSubmit');
+        const quizResult = document.getElementById('quizResult');
+        const resultName = document.getElementById('resultName');
+        const resultDesc = document.getElementById('resultDesc');
+
+        quizSubmit.addEventListener('click', () => {
+            // 统计答案
+            const answerCounts = {};
+            Object.values(selectedAnswers).forEach(ans => {
+                answerCounts[ans] = (answerCounts[ans] || 0) + 1;
+            });
+
+            // 找到最多的答案
+            let maxChar = 'pig';
+            let maxCount = 0;
+            
+            Object.entries(answerCounts).forEach(([char, count]) => {
+                if (count > maxCount) {
+                    maxCount = count;
+                    maxChar = char;
+                }
+            });
+
+            // 显示结果
+            resultName.textContent = resultConfig[maxChar].name;
+            resultDesc.textContent = resultConfig[maxChar].desc;
+            quizResult.style.display = 'block';
+            
+            // 滚动到结果区域
+            quizResult.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        // 留言板功能
+        const messageForm = document.getElementById('messageForm');
+        const messageList = document.getElementById('messageList');
+        const msgAuthor = document.getElementById('msgAuthor');
+        const msgContent = document.getElementById('msgContent');
+
+        messageForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // 获取表单值
+            const author = msgAuthor.value.trim();
+            const content = msgContent.value.trim();
+            
+            if (!author || !content) return;
+
+            // 创建新留言
+            const now = new Date();
+            const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+            const newMessage = document.createElement('div');
+            newMessage.className = 'message-item';
+            newMessage.innerHTML = `
+                <div class="message-header">
+                    <div class="message-author">
+                        ${author}
+                    </div>
+                    <div class="message-time">${timeStr}</div>
+                </div>
+                <div class="message-content">
+                    ${content}
+                </div>
+            `;
+
+            // 添加到留言列表顶部
+            messageList.insertBefore(newMessage, messageList.firstChild);
+            
+            // 清空表单
+            msgAuthor.value = '';
+            msgContent.value = '';
+            
+            // 提示成功
+            alert('留言发布成功！感谢你的分享～');
+        });
+
+        // 投票功能
+        const voteItems = document.querySelectorAll('.vote-item');
+        let selectedVote = null;
+
+        voteItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // 取消其他选中状态
+                voteItems.forEach(el => el.classList.remove('selected'));
+                // 选中当前项
+                item.classList.add('selected');
+                selectedVote = item;
+            });
+        });
+
+        const voteBtn = document.getElementById('voteBtn');
+        voteBtn.addEventListener('click', () => {
+            if (!selectedVote) {
+                alert('请先选择你喜欢的角色～');
+                return;
+            }
+
+            // 获取当前票数和进度
+            const voteCountEl = selectedVote.querySelector('.vote-count');
+            const voteProgressEl = selectedVote.querySelector('.vote-progress');
+            
+            // 解析现有票数和百分比
+            const countMatch = voteCountEl.textContent.match(/(\d+)票/);
+            const percentMatch = voteCountEl.textContent.match(/\((\d+)%\)/);
+            
+            if (countMatch && percentMatch) {
+                let newCount = parseInt(countMatch[1]) + 1;
+                let newPercent = parseInt(percentMatch[1]) + 1;
+                
+                // 更新显示
+                voteCountEl.textContent = `${newCount}票 (${newPercent}%)`;
+                voteProgressEl.style.width = `${newPercent}%`;
+                
+                // 提示投票成功
+                alert(`成功为${selectedVote.querySelector('.vote-character').textContent}投票！`);
+                
+                // 取消选中状态
+                selectedVote.classList.remove('selected');
+                selectedVote = null;
+            }
+        });
+
+        // 页面加载动画
+        window.addEventListener('load', () => {
+            const cards = document.querySelectorAll('.interactive-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 200 + index * 200);
+            });
+
+            // 初始化投票进度条动画
+            setTimeout(() => {
+                document.querySelectorAll('.vote-progress').forEach(progress => {
+                    const targetWidth = progress.style.width;
+                    progress.style.width = '0';
+                    setTimeout(() => {
+                        progress.style.width = targetWidth;
+                    }, 300);
+                });
+            }, 800);
+        });
+    </script>
+</body>
+</html>
