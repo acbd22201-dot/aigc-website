@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浪浪山妖怪图鉴 - 浪浪山小妖怪</title>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局样式复用首页，保持统一 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "Heiti SC", sans-serif;
+        }
+
+        body {
+            background-color: #f9f5f0;
+            background-image: url("https://picsum.photos/id/1059/1920/1080"); /* 可替换为浪浪山淡色纹理背景 */
+            background-blend-mode: overlay;
+            background-attachment: fixed;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 导航栏样式（复用首页，保持统一） */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 253, 248, 0.95);
+            box-shadow: 0 2px 10px rgba(160, 130, 90, 0.1);
+            z-index: 999;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-image: url("小猪妖.jpg"); /* 小野猪妖头像 */
+            background-size: cover;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e67e22;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-item a {
+            text-decoration: none;
+            color: #663300;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item a:hover, .nav-item a.active {
+            color: #e67e22;
+            border-bottom: 2px solid #e67e22;
+        }
+
+        .menu-btn {
+            display: none;
+            font-size: 24px;
+            color: #663300;
+            cursor: pointer;
+        }
+
+        /* 页面主体样式 */
+        .container {
+            max-width: 1200px;
+            margin: 120px auto 80px; /* 上方留出导航栏空间 */
+            padding: 0 20px;
+        }
+
+        /* 页面标题 */
+        .page-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-title h1 {
+            font-size: 32px;
+            color: #663300;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .page-title h1 i {
+            color: #e67e22;
+            font-size: 36px;
+        }
+
+        .page-title .divider {
+            width: 100px;
+            height: 3px;
+            background-color: #e67e22;
+            margin: 0 auto;
+            border-radius: 3px;
+        }
+
+        /* 筛选栏样式 */
+        .filter-bar {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(160, 130, 90, 0.1);
+            margin-bottom: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-label {
+            color: #663300;
+            font-weight: 500;
+            margin-right: 10px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            background-color: #f9f5f0;
+            color: #663300;
+            border: none;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #e67e22;
+            color: white;
+            box-shadow: 0 2px 8px rgba(230, 126, 34, 0.2);
+        }
+
+        /* 妖怪卡片列表 */
+        .monster-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .monster-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(160, 130, 90, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .monster-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(160, 130, 90, 0.2);
+        }
+
+        .monster-avatar {
+            width: 100%;
+            height: 220px;
+            background-size: cover;
+            background-position: center;
+            border-bottom: 3px solid #e67e22;
+        }
+
+        .monster-info {
+            padding: 25px;
+        }
+
+        .monster-name {
+            font-size: 22px;
+            color: #663300;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .monster-species {
+            font-size: 14px;
+            color: #885522;
+            margin-bottom: 15px;
+        }
+
+        .monster-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            padding: 3px 12px;
+            background-color: #f9f5f0;
+            color: #e67e22;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .monster-desc {
+            color: #885522;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* 热门推荐侧边栏（桌面端） */
+        .main-content {
+            display: flex;
+            gap: 30px;
+        }
+
+        .card-container {
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 280px;
+            position: sticky;
+            top: 140px;
+            align-self: flex-start;
+        }
+
+        .hot-rank {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(160, 130, 90, 0.1);
+        }
+
+        .hot-title {
+            font-size: 18px;
+            color: #663300;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hot-title i {
+            color: #e67e22;
+        }
+
+        .rank-list {
+            list-style: none;
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f9f5f0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .rank-item:last-child {
+            border-bottom: none;
+        }
+
+        .rank-item:hover {
+            background-color: #f9f5f0;
+            border-radius: 8px;
+            padding-left: 10px;
+        }
+
+        .rank-num {
+            width: 28px;
+            height: 28px;
+            background-color: #e67e22;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .rank-num.top1 {
+            background-color: #e74c3c;
+        }
+
+        .rank-num.top2 {
+            background-color: #f39c12;
+        }
+
+        .rank-num.top3 {
+            background-color: #2ecc71;
+        }
+
+        .rank-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #f9f5f0;
+        }
+
+        .rank-info {
+            flex: 1;
+        }
+
+        .rank-name {
+            font-weight: 500;
+            color: #663300;
+            margin-bottom: 3px;
+        }
+
+        .rank-desc {
+            font-size: 12px;
+            color: #885522;
+        }
+
+        /* 弹窗详情样式 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 30px;
+            position: relative;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #885522;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #e67e22;
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .modal-avatar {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(160, 130, 90, 0.1);
+        }
+
+        .modal-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .modal-name {
+            font-size: 32px;
+            color: #663300;
+            margin-bottom: 10px;
+        }
+
+        .modal-species {
+            font-size: 16px;
+            color: #e67e22;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .modal-tag {
+            padding: 6px 18px;
+            background-color: #f9f5f0;
+            color: #e67e22;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .modal-desc {
+            color: #885522;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .modal-scene {
+            margin-top: 30px;
+        }
+
+        .modal-scene h3 {
+            font-size: 20px;
+            color: #663300;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-scene h3 i {
+            color: #e67e22;
+        }
+
+        .scene-img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .scene-desc {
+            color: #885522;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(160, 130, 90, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top i {
+            font-size: 24px;
+            color: #e67e22;
+        }
+
+        .back-to-top:hover {
+            background-color: #e67e22;
+            transform: translateY(-5px);
+        }
+
+        .back-to-top:hover i {
+            color: white;
+        }
+
+        /* 页脚样式（复用首页） */
+        .footer {
+            background-color: #663300;
+            color: white;
+            padding: 50px 0 20px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #f9f5f0;
+        }
+
+        .footer-desc {
+            color: #f9f5f0cc;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f9f5f099;
+            font-size: 14px;
+        }
+
+        /* 响应式适配（移动端） */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                flex-direction: column;
+                background-color: rgba(255, 253, 248, 0.98);
+                width: 100%;
+                height: calc(100vh - 70px);
+                padding: 30px;
+                transition: 0.3s;
+                gap: 20px;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .menu-btn {
+                display: block;
+            }
+
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+                margin-top: 30px;
+            }
+
+            .page-title h1 {
+                font-size: 28px;
+            }
+
+            .modal-name {
+                font-size: 28px;
+            }
+
+            .modal-body {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <div class="logo-img"></div>
+                <span class="logo-text">浪浪山小妖怪</span>
+            </a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html">首页</a></li>
+                <li class="nav-item"><a href="monster-album.html" class="active">浪浪山图鉴</a></li>
+                <li class="nav-item"><a href="plot-review.html">剧情回顾</a></li>
+                <li class="nav-item"><a href="behind-the-scenes.html">幕后故事</a></li>
+                <li class="nav-item"><a href="quotes.html">妖怪语录</a></li>
+                <li class="nav-item"><a href="interaction.html">互动专区</a></li>
+                <li class="nav-item"><a href="about-author.html">关于作者</a></li>
+                <li class="nav-item"><a href="assignment.html">作业说明</a></li>
+            </ul>
+            <div class="menu-btn" id="menuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面主体 -->
+    <div class="container">
+        <!-- 页面标题 -->
+        <div class="page-title">
+            <h1><i class="fas fa-paw"></i>浪浪山妖怪图鉴</h1>
+            <div class="divider"></div>
+        </div>
+
+        <!-- 筛选栏 -->
+        <div class="filter-bar">
+            <span class="filter-label">妖怪类型：</span>
+            <div class="filter-group">
+                <button class="filter-btn active" data-filter="all">全部妖怪</button>
+                <button class="filter-btn" data-filter="boar">野猪妖</button>
+                <button class="filter-btn" data-filter="gorilla">猩猩怪</button>
+                <button class="filter-btn" data-filter="toad">蛤蟆精</button>
+                <button class="filter-btn" data-filter="weasel">黄鼠狼精</button>
+                <button class="filter-btn" data-filter="other">其他妖怪</button>
+            </div>
+        </div>
+
+        <div class="filter-bar">
+            <span class="filter-label">性格标签：</span>
+            <div class="filter-group">
+                <button class="filter-btn active" data-tag="all">全部性格</button>
+                <button class="filter-btn" data-tag="honest">憨厚老实</button>
+                <button class="filter-btn" data-tag="loyal">忠诚可靠</button>
+                <button class="filter-btn" data-tag="crafty">精明狡黠</button>
+                <button class="filter-btn" data-tag="arrogant">傲娇自负</button>
+                <button class="filter-btn" data-tag="cute">灵动可爱</button>
+            </div>
+        </div>
+
+        <!-- 主内容区（卡片+侧边栏） -->
+        <div class="main-content">
+            <div class="card-container">
+                <div class="monster-list">
+                    <!-- 妖怪卡片1：小猪妖 -->
+                    <div class="monster-card" data-type="boar" data-tags="honest,hardworking">
+                         <div class="monster-avatar" style="background-image: url('小猪妖.jpg'); background-position: center -70px;"></div>
+                        <div class="monster-info">
+                            <div class="monster-name">
+                                <span>小猪妖</span>
+                                <i class="fas fa-star" style="color: #f39c12;"></i>
+                            </div>
+                            <div class="monster-species">物种：野猪妖</div>
+                            <div class="monster-tags">
+                                <span class="tag">憨厚老实</span>
+                                <span class="tag">努力上进</span>
+                            </div>
+                            <div class="monster-desc">浪浪山最努力的打工人，戴绿围巾、背小葫芦，偶尔犯迷糊但永远积极，梦想是成为大王的得力助手。</div>
+                        </div>
+                    </div>
+
+                    <!-- 妖怪卡片2：猩猩怪 -->
+                    <div class="monster-card" data-type="gorilla" data-tags="loyal,brave">
+                        <div class="monster-avatar" style="background-image: url('猩猩怪.jpg'); background-position: center -100px;"></div>
+                        <div class="monster-info">
+                            <div class="monster-name">
+                                <span>猩猩怪</span>
+                                <i class="fas fa-fist-raised" style="color: #e74c3c;"></i>
+                            </div>
+                            <div class="monster-species">物种：猩猩怪</div>
+                            <div class="monster-tags">
+                                <span class="tag">忠诚可靠</span>
+                                <span class="tag">勇猛强悍</span>
+                            </div>
+                            <div class="monster-desc">浪浪山妖怪小队的“武力担当”，沉默寡言但执行力超强，对伙伴极度忠诚，是团队的“移动堡垒”。</div>
+                        </div>
+                    </div>
+
+                    <!-- 妖怪卡片3：蛤蟆精 -->
+                    <div class="monster-card" data-type="toad" data-tags="honest,crafty">
+                        <div class="monster-avatar" style="background-image: url('蛤蟆精.jpg'); background-position: center -100px;"></div>
+                        <div class="monster-info">
+                            <div class="monster-name">
+                                <span>蛤蟆精</span>
+                                <i class="fas fa-tools" style="color: #3498db;"></i>
+                            </div>
+                            <div class="monster-species">物种：蛤蟆精</div>
+                            <div class="monster-tags">
+                                <span class="tag">憨厚务实</span>
+                                <span class="tag">精明能干</span>
+                            </div>
+                            <div class="monster-desc">小队的“技术担当”，擅长制作陷阱、修理工具，话不多但点子多，偶尔会用蛤蟆功化解危机。</div>
+                        </div>
+                    </div>
+
+                    <!-- 妖怪卡片4：黄鼠狼精 -->
+                    <div class="monster-card" data-type="weasel" data-tags="crafty,arrogant">
+                        <div class="monster-avatar" style="background-image: url('黄鼠狼精.jpg'); background-position: center -100px;"></div>
+                        <div class="monster-info">
+                            <div class="monster-name">
+                                <span>黄鼠狼精</span>
+                                <i class="fas fa-wind" style="color: #9b59b6;"></i>
+                            </div>
+                            <div class="monster-species">物种：黄鼠狼精</div>
+                            <div class="monster-tags">
+                                <span class="tag">精明狡黠</span>
+                                <span class="tag">傲娇毒舌</span>
+                            </div>
+                            <div class="monster-desc">擅长打探消息、设置圈套，嘴上不饶人但关键时刻很靠谱，自带“臭屁功”技能，是小队的“情报员”。</div>
+                        </div>
+                    </div>
+
+                    <!-- 妖怪卡片5：黄眉怪 -->
+                    <div class="monster-card" data-type="other" data-tags="arrogant,powerful">
+                        <div class="monster-avatar" style="background-image: url('黄眉怪.jpg'); background-position: center -70px;"></div>
+                        <div class="monster-info">
+                            <div class="monster-name">
+                                <span>黄眉怪</span>
+                                <i class="fas fa-crown" style="color: #f1c40f;"></i>
+                            </div>
+                            <div class="monster-species">物种：黄眉怪</div>
+                            <div class="monster-tags">
+                                <span class="tag">傲娇自负</span>
+                                <span class="tag">实力强悍</span>
+                            </div>
+                            <div class="monster-desc">浪浪山的实力派妖怪，擅长法术，性格高傲，不屑于做小事，但对认可的伙伴会默默提供帮助。</div>
+                        </div>
+                    </div>
+
+                    <!-- 妖怪卡片6：白毛老鼠精 -->
+                    <div class="monster-card" data-type="other" data-tags="cute,crafty">
+                        <div class="monster-avatar" style="background-image: url('白毛老鼠精.jpg'); background-position: center -70px;"></div>
+                        <div class="monster-info">
+                            <div class="monster-name">
+                                <span>白毛老鼠精</span>
+                                <i class="fas fa-bell" style="color: #ff6b9d;"></i>
+                            </div>
+                            <div class="monster-species">物种：白毛老鼠精</div>
+                            <div class="monster-tags">
+                                <span class="tag">灵动可爱</span>
+                                <span class="tag">机智过人</span>
+                            </div>
+                            <div class="monster-desc">体型小巧，动作敏捷，擅长钻洞、偷取物品，性格古灵精怪，喜欢收集亮晶晶的东西，是小队的“奇兵”。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 热门推荐侧边栏 -->
+            <div class="sidebar">
+                <div class="hot-rank">
+                    <h3 class="hot-title"><i class="fas fa-fire"></i>热门妖怪TOP3</h3>
+                    <ul class="rank-list">
+                        <li class="rank-item" data-target="boar">
+                            <div class="rank-num top1">1</div>
+                            <div class="rank-avatar" style="background-image: url('小猪妖.jpg')"></div>
+                            <div class="rank-info">
+                                <div class="rank-name">小猪妖</div>
+                                <div class="rank-desc">努力又憨厚的打工人</div>
+                            </div>
+                        </li>
+                        <li class="rank-item" data-target="gorilla">
+                            <div class="rank-num top2">2</div>
+                            <div class="rank-avatar" style="background-image: url('猩猩怪.jpg')"></div>
+                            <div class="rank-info">
+                                <div class="rank-name">猩猩怪</div>
+                                <div class="rank-desc">忠诚勇猛的守护者</div>
+                            </div>
+                        </li>
+                        <li class="rank-item" data-target="other">
+                            <div class="rank-num top3">3</div>
+                            <div class="rank-avatar" style="background-image: url('白毛老鼠精.jpg')"></div>
+                            <div class="rank-info">
+                                <div class="rank-name">白毛老鼠精</div>
+                                <div class="rank-desc">古灵精怪的小可爱</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 妖怪详情弹窗 -->
+    <div class="modal" id="monsterModal">
+        <div class="modal-content">
+            <div class="close-btn" id="closeModal"><i class="fas fa-times"></i></div>
+            <div class="modal-body">
+                <div class="modal-avatar">
+                    <img src="替换为：当前点击妖怪的高清大图" alt="妖怪详情图" id="modalImg">
+                </div>
+                <div class="modal-info">
+                    <h2 class="modal-name" id="modalName">小猪妖</h2>
+                    <div class="modal-species" id="modalSpecies"><i class="fas fa-tag"></i>物种：野猪妖</div>
+                    <div class="modal-tags" id="modalTags">
+                        <span class="modal-tag">憨厚老实</span>
+                        <span class="modal-tag">努力上进</span>
+                        <span class="modal-tag">偶尔迷糊</span>
+                    </div>
+                    <div class="modal-desc" id="modalDesc">
+                        浪浪山妖怪小队的普通成员，也是最努力的“打工人”。戴着标志性的绿围巾，背上总是背着一个小葫芦，里面装着他的“宝贝”（可能是水、零食，或者工作用的小工具）。
+                        <br><br>
+                        小猪妖性格憨厚，有点小迷糊，经常因为粗心犯小错误被狼首领批评，但他从不气馁，每次都认真改正，对伙伴们也十分真诚。他的梦想是成为大王手下最厉害的妖怪，让家人骄傲。
+                        <br><br>
+                        剧中的他总是在奔波：搬运货物、设置陷阱、打探消息，虽然工作辛苦，但他总能在平凡的日子里找到快乐——比如和猩猩怪一起训练，听蛤蟆精讲工具制作技巧，或者在夕阳下欣赏浪浪山的风景。
+                    </div>
+                    <div class="modal-scene">
+                        <h3><i class="fas fa-film"></i>经典名场面</h3>
+                        <img src="替换为：小猪妖经典场景截图（如冒雨搬货、认真工作）" alt="经典场景" class="scene-img">
+                        <div class="scene-desc">小猪妖为了完成大王交代的“重要任务”，冒着大雨搬运沉重的货物，虽然浑身湿透、力气耗尽，但依然咬牙坚持，最后得到了伙伴们的主动帮忙，展现了他的坚韧和团队的温暖。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 返回顶部按钮 -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <h3 class="footer-title">浪浪山小妖怪主题网站</h3>
+            <p class="footer-desc">
+                本网站所有素材来源于《浪浪山小妖怪》官方及网络公开资源<br>
+                设计理念：以治愈系风格为核心，打造沉浸式的浪浪山世界，传递温暖与快乐
+            </p>
+            <div class="copyright">
+                © 2025 设计人：侯德礼
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript 交互 -->
+    <script>
+        // 移动端菜单切换（复用首页逻辑）
+        const menuBtn = document.getElementById('menuBtn');
+        const navMenu = document.querySelector('.nav-menu');
+
+        menuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            const icon = menuBtn.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        });
+
+        // 筛选功能
+        const typeFilterBtns = document.querySelectorAll('.filter-btn[data-filter]');
+        const tagFilterBtns = document.querySelectorAll('.filter-btn[data-tag]');
+        const monsterCards = document.querySelectorAll('.monster-card');
+
+        // 类型筛选
+        typeFilterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                typeFilterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filterValue = btn.getAttribute('data-filter');
+                
+                monsterCards.forEach(card => {
+                    if (filterValue === 'all' || card.getAttribute('data-type') === filterValue) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // 标签筛选
+        tagFilterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                tagFilterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const tagValue = btn.getAttribute('data-tag');
+                
+                monsterCards.forEach(card => {
+                    const cardTags = card.getAttribute('data-tags').split(',');
+                    if (tagValue === 'all' || cardTags.includes(tagValue)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // 弹窗详情功能
+        const modal = document.getElementById('monsterModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalImg = document.getElementById('modalImg');
+        const modalName = document.getElementById('modalName');
+        const modalSpecies = document.getElementById('modalSpecies');
+        const modalTags = document.getElementById('modalTags');
+        const modalDesc = document.getElementById('modalDesc');
+
+        // 卡片点击打开弹窗
+        monsterCards.forEach(card => {
+            card.addEventListener('click', () => {
+                // 获取卡片数据
+                const cardImg = card.querySelector('.monster-avatar').style.backgroundImage.slice(5, -2); // 提取背景图URL
+                const name = card.querySelector('.monster-name span').textContent;
+                const species = card.querySelector('.monster-species').textContent;
+                const tags = card.querySelectorAll('.tag');
+                const desc = card.querySelector('.monster-desc').textContent;
+
+                // 填充弹窗基础数据
+                modalImg.src = cardImg;
+                modalName.textContent = name;
+                modalSpecies.textContent = species;
+                
+                // 重置标签
+                modalTags.innerHTML = '';
+                tags.forEach(tag => {
+                    const newTag = document.createElement('span');
+                    newTag.className = 'modal-tag';
+                    newTag.textContent = tag.textContent;
+                    modalTags.appendChild(newTag);
+                });
+
+                // 为每个角色设置专属详细描述和名场面
+                if (name === '小猪妖') {
+                    modalDesc.innerHTML = `
+                        浪浪山妖怪小队的普通成员，也是最努力的“打工人”。戴着标志性的绿围巾，背上总是背着一个小葫芦，里面装着他的“宝贝”（可能是水、零食，或者工作用的小工具）。
+                        <br><br>
+                        小猪妖性格憨厚，有点小迷糊，经常因为粗心犯小错误被狼首领批评，但他从不气馁，每次都认真改正，对伙伴们也十分真诚。他的梦想是成为大王手下最厉害的妖怪，让家人骄傲。
+                        <br><br>
+                        剧中的他总是在奔波：搬运货物、设置陷阱、打探消息，虽然工作辛苦，但他总能在平凡的日子里找到快乐——比如和猩猩怪一起训练，听蛤蟆精讲工具制作技巧，或者在夕阳下欣赏浪浪山的风景。
+                    `;
+                    document.querySelector('.scene-img').src = '替换为：小猪妖冒雨搬货/认真工作的截图';
+                    document.querySelector('.scene-desc').textContent = '小猪妖为了完成大王交代的“重要任务”，冒着大雨搬运沉重的货物，虽然浑身湿透、力气耗尽，但依然咬牙坚持，最后得到了伙伴们的主动帮忙，展现了他的坚韧和团队的温暖。';
+                } else if (name === '猩猩怪') {
+                    modalDesc.innerHTML = `
+                        浪浪山妖怪小队的“武力担当”，体型壮硕，肌肉发达，平时喜欢沉默寡言，但只要伙伴们遇到危险，他总会第一个冲上前。手上经常拿着一根粗壮的木棍作为武器，战斗力极强。
+                        <br><br>
+                        猩猩怪性格忠诚可靠，对小队的任务绝对服从，对伙伴们极度护短。虽然看起来严肃吓人，但内心很细腻，会默默照顾年纪小的小猪妖和白毛老鼠精，偶尔还会用笨拙的方式安慰情绪低落的伙伴。
+                        <br><br>
+                        他不擅长复杂的计谋，却有着超强的执行力，不管是搬运重物、搭建营地，还是对抗敌人，他都是团队最坚实的后盾。他的愿望很简单：让浪浪山的伙伴们都能平安快乐地生活。
+                    `;
+                    document.querySelector('.scene-img').src = '替换为：猩猩怪保护伙伴/战斗的截图';
+                    document.querySelector('.scene-desc').textContent = '小队遭遇外敌入侵时，猩猩怪毫不犹豫地挡在伙伴们身前，仅凭一根木棍就击退了数名敌人，虽然自己手臂受伤，但依然笑着说“没事，这点小伤不算什么”，尽显守护者本色。';
+                } else if (name === '蛤蟆精') {
+                    modalDesc.innerHTML = `
+                        浪浪山妖怪小队的“技术担当”，绿色的皮肤、圆滚滚的身材，背上总是背着一个装满工具的布包，里面有锤子、钉子、绳子、草药等各种物件，堪称“移动工具箱”。
+                        <br><br>
+                        蛤蟆精性格憨厚务实，话不多但点子精准，擅长制作各种陷阱、修理工具，还懂一些基础的草药知识，伙伴们受伤时总能被他快速治愈。他看似老实，实则精明能干，关键时刻总能想出解决问题的好办法。
+                        <br><br>
+                        他的独门绝技是“蛤蟆功”，不仅能跳得又高又远，还能喷出黏液困住敌人。虽然平时低调，但在团队中不可或缺，是大家公认的“靠谱大哥”，最大的乐趣就是研究新的工具和陷阱。
+                    `;
+                    document.querySelector('.scene-img').src = '替换为：蛤蟆精制作工具/用草药救人的截图';
+                    document.querySelector('.scene-desc').textContent = '小队执行任务时陷入陷阱，蛤蟆精凭借自己的工具和经验，快速拆解了陷阱机关，还利用身边的草药为受伤的黄鼠狼精处理伤口，冷静又高效地化解了危机。';
+                } else if (name === '黄鼠狼精') {
+                    modalDesc.innerHTML = `
+                        浪浪山妖怪小队的“情报担当”，黄棕色的皮毛、尖嘴猴腮的长相，眼神里总带着一丝狡黠，动作敏捷，擅长隐藏和打探消息，是团队的“顺风耳”和“千里眼”。
+                        <br><br>
+                        黄鼠狼精性格精明狡黠，嘴上不饶人，喜欢吐槽伙伴们的“笨办法”，看似自私自利，实则很在乎团队。他的独门绝技是“臭屁功”，遇到危险时能喷出臭屁击退敌人，虽然不雅但实用性极强。
+                        <br><br>
+                        他擅长设置圈套、迷惑敌人，打探消息的能力更是一流，不管是敌人的动向，还是浪浪山的隐秘角落，他都了如指掌。虽然经常耍小聪明，但关键时刻总能为团队提供重要情报，是小队的“奇兵”。
+                    `;
+                    document.querySelector('.scene-img').src = '替换为：黄鼠狼精打探消息/耍小聪明的截图';
+                    document.querySelector('.scene-desc').textContent = '小队需要获取敌人的情报，黄鼠狼精伪装成普通妖怪混入敌方阵营，凭借自己的机智和口才，成功套取了关键信息，还在被发现时用“臭屁功”顺利脱身，完美完成任务。';
+                } else if (name === '黄眉怪') {
+                    modalDesc.innerHTML = `
+                        浪浪山的实力派妖怪，黄色的眉毛是他最显著的标志，穿着一身华丽的道袍（或战甲），自带威严气场，擅长法术，战斗力在浪浪山数一数二。
+                        <br><br>
+                        黄眉怪性格傲娇自负，觉得自己实力超群，不屑于做搬运、打探这类“小事”，经常对伙伴们的“低级操作”嗤之以鼻，但内心善良，对认可的伙伴会默默提供帮助。他说话直接，有点毒舌，却从不说虚情假意的话。
+                        <br><br>
+                        他的法术能力极强，能呼风唤雨、幻化分身，是浪浪山的“定海神针”。虽然平时独来独往，但在浪浪山遇到重大危机时，总会挺身而出。他的目标是不断提升自己的法术，成为真正的“强者”。
+                    `;
+                    document.querySelector('.scene-img').src = '替换为：黄眉怪施展法术/威严站立的截图';
+                    document.querySelector('.scene-desc').textContent = '浪浪山遭遇强大妖怪入侵，伙伴们难以抵挡，黄眉怪虽然嘴上说着“一群废物”，却毫不犹豫地施展法术，召唤狂风暴雨击退了入侵者，事后还傲娇地说“只是不想我的地盘被破坏”。';
+                } else if (name === '白毛老鼠精') {
+                    modalDesc.innerHTML = `
+                        浪浪山妖怪小队的“灵动担当”，全身覆盖着雪白的皮毛，体型小巧玲珑，耳朵尖尖的，脖子上挂着一个小巧的铃铛，走路时会发出“叮叮当当”的声音，十分可爱。
+                        <br><br>
+                        白毛老鼠精性格古灵精怪，机智过人，动作敏捷得惊人，擅长钻洞、攀爬、偷取物品，还能听懂其他小动物的语言，是团队的“沟通桥梁”和“秘密武器”。她喜欢收集亮晶晶的东西，口袋里总装着各种小饰品。
+                        <br><br>
+                        虽然看起来娇小可爱，但她的胆子很大，遇到危险时从不退缩，总能凭借自己的机智和敏捷化险为夷。她喜欢捉弄伙伴们，尤其是傲娇的黄鼠狼精，经常把他耍得团团转，但伙伴们都很喜欢这个可爱的“小调皮”。
+                    `;
+                    document.querySelector('.scene-img').src = '替换为：白毛老鼠精钻洞/捉弄伙伴的截图';
+                    document.querySelector('.scene-desc').textContent = '小队需要获取被敌人锁在密室里的关键物品，白毛老鼠精凭借自己小巧的体型和敏捷的动作，从密室的小窗口钻了进去，成功偷取了物品，还在离开时恶作剧般地偷走了敌人的宝贝铃铛，让敌人哭笑不得。';
+                }
+
+                // 打开弹窗
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // 禁止背景滚动
+            });
+        });
+
+        // 关闭弹窗
+        closeModal.addEventListener('click', () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = ''; // 恢复背景滚动
+        });
+
+        // 点击弹窗外部关闭
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // 返回顶部按钮
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('active');
+            } else {
+                backToTop.classList.remove('active');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 热门榜单点击跳转
+        const rankItems = document.querySelectorAll('.rank-item');
+        rankItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const targetType = item.getAttribute('data-target');
+                // 激活对应筛选按钮
+                typeFilterBtns.forEach(btn => {
+                    if (btn.getAttribute('data-filter') === targetType) {
+                        btn.click(); // 触发筛选
+                    }
+                });
+                // 滚动到卡片区域
+                document.querySelector('.card-container').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
